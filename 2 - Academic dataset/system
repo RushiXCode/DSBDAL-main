@@ -1,0 +1,36 @@
+import pandas as pd
+import numpy as np
+import seaborn as sns
+
+
+df = pd.read_csv("xAPI-Edu-Data.csv")
+
+df.info()
+
+df.describe()
+
+df.isnull().sum()
+
+df.dtypes
+
+df['gender'] = df['gender'].replace({'M': 0, 'F': 1})
+
+df['Topic'] = pd.factorize(df['Topic'])[0]
+
+df['raisedhands'] = (df['raisedhands'] - df['raisedhands'].min()) / (df['raisedhands'].max() - df['raisedhands'].min())
+
+sns.boxplot(df['raisedhands'])
+
+sns.boxplot(data=df[['VisITedResources', 'AnnouncementsView','Discussion']])
+
+sns.scatterplot(x='VisITedResources', y='Discussion', data=df)
+
+Q1 = df['raisedhands'].quantile(0.25)
+Q3 = df['raisedhands'].quantile(0.75)
+IQR = Q3 - Q1
+print(f"IQR for 'raisedhands' column: {IQR}")
+
+Q1_VisITedResources = df['VisITedResources'].quantile(0.25)
+Q3_VisITedResources = df['VisITedResources'].quantile(0.75)
+IQR_VisITedResources = Q3_VisITedResources - Q1_VisITedResources
+print(f"IQR for 'VisITedResources' column: {IQR_VisITedResources}")

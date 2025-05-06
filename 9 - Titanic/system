@@ -1,0 +1,42 @@
+import pandas as pd 
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+data = sns.load_dataset("titanic")
+
+data.isnull().sum()
+
+data.dtypes
+
+data['age'].fillna(data['age'].mean(), inplace=True)
+
+data['deck'].fillna(method='ffill', inplace=True)
+data['deck'].fillna(method='bfill', inplace=True)
+
+data.dropna(subset=['embarked'], inplace=True)
+data.dropna(subset=['embark_town'], inplace=True)
+
+Q1 = data['age'].quantile(0.25)
+Q3 = data['age'].quantile(0.75)
+IQR = Q3 - Q1
+outliers = data[(data['age'] < (Q1-1.5*IQR)) | (data['age'] > (Q3+1.5*IQR))]
+outliers
+
+sns.boxplot(x='sex', y='age', data=outliers, hue="survived")
+
+sns.stripplot(x='sex', y='age', data=outliers, jitter=True, hue='survived')
+
+sns.catplot(x = "sex", hue= "survived", kind= "count", data=outliers)
+
+Q1 = data['age'].quantile(0.25)
+Q3 = data['age'].quantile(0.75)
+IQR = Q3 - Q1
+within_range = data[~((data['age'] < (Q1 - 1.5 * IQR)) | (data['age'] > (Q3 + 1.5 * IQR)))]
+within_range
+
+sns.boxplot(x='sex', y='age', data=within_range, hue="survived")
+
+sns.stripplot(x='sex', y='age', data=within_range, jitter=True, hue='survived')
+
+sns.catplot(x = "sex", hue= "survived", kind= "count", data=outliers)

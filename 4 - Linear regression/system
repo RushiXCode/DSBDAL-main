@@ -1,0 +1,38 @@
+import pandas as pd 
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+data = pd.read_csv("BostonHousing.csv")
+
+data.columns
+
+data.isnull().sum()
+
+sns.set(rc={'figure.figsize':(11.7,8.27)})
+sns.distplot(data['medv'],bins=30)
+plt.show()
+
+sns.heatmap(data=(data.corr().round(2)),annot=True)
+
+plt.figure(figsize=(20,5))
+features = ['lstat','rm']
+target=data['medv']
+
+for i, col in enumerate(features):
+    plt.subplot(1,len(features),i+1)
+    x = data[col]
+    y = target
+    plt.scatter(x,y,marker='o')
+    plt.title(col)
+    plt.xlabel(col)
+    plt.ylabel('medv')
+
+from sklearn.model_selection import train_test_split
+X = pd.DataFrame(np.c_[data['lstat'], data['rm']], columns=['lstat', 'rm'])
+Y = data['medv']
+x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=5)
+print(x_train.shape)
+print(x_test.shape)
+print(y_train.shape)
+print(y_test.shape)

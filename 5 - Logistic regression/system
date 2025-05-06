@@ -1,0 +1,56 @@
+import numpy as np
+import pandas as pd
+
+df = pd.read_csv('Social_Network_Ads.csv')
+df
+
+df.head(10)
+
+df.isnull().sum()
+
+df.dtypes
+
+X = df[['Age','EstimatedSalary']]
+Y = df['Purchased']
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state = 0)
+
+print(X_train.shape)
+print(X_test.shape)
+print(Y_train.shape)
+print(Y_test.shape)
+
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+print("Transformed X_train :-\n",X_train)
+print("Transformed X_test :-\n",X_test)
+
+from sklearn.linear_model import LogisticRegression
+model = LogisticRegression()
+model.fit(X_train, Y_train)
+
+y_pred = model.predict(X_test)
+print("Y Prediction", y_pred)
+
+from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
+cm = confusion_matrix(Y_test, y_pred)
+print("Confusion Matrix:\n", cm)
+
+accuracy = accuracy_score(Y_test, y_pred)
+print("Accuracy: ", accuracy)
+
+cr = classification_report(Y_test, y_pred)
+print("Classification Report :- \n", cr)
+
+from sklearn.metrics import precision_score, recall_score
+precision = precision_score(Y_test, y_pred)
+print("Precision :- ", precision)
+
+recall = recall_score(Y_test, y_pred)
+print("Recall :- ", recall)
+
+error = 1 - accuracy
+print("Error Rate :- ", error)

@@ -1,0 +1,100 @@
+import numpy as np
+import pandas as pd
+import nltk
+
+with open("document.txt", "r", encoding="utf-8-sig") as file:
+    document = file.read()
+print(document)
+
+from nltk.tokenize import word_tokenize, sent_tokenize
+from nltk.corpus import stopwords
+nltk.download('punkt')
+nltk.download('punkt_tab')
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('averaged_perceptron_tagger_eng')
+
+stop_words = set(stopwords.words('english'))
+tokens = word_tokenize(document)
+filtered_tokens = [word for word in tokens if word.lower() not in stop_words]
+print("\nTokens after Stop Word Removal:\n\n", filtered_tokens)
+
+from nltk.stem import PorterStemmer
+from tabulate import tabulate
+sentences = sent_tokenize(document)
+df = pd.DataFrame({'Original Sentence': sentences})
+stemmer = PorterStemmer()
+
+def stem_words(sentence):
+    words = word_tokenize(sentence)
+    return ' '.join([stemmer.stem(word) for word in words])
+
+df['Stemmed Sentence'] = df['Original Sentence'].apply(stem_words)
+pd.set_option('display.max_colwidth', 50)
+pd.set_option('display.width', 1000)
+pd.set_option('display.max_rows', None)
+
+print("\nProcessed DataFrame (Stemmed Sentences):\n")
+print(tabulate(df, headers='keys', tablefmt='grid'))
+
+
+from nltk.stem import WordNetLemmatizer
+from tabulate import tabulate
+sentences = sent_tokenize(document)
+
+df = pd.DataFrame({'Original Sentence': sentences})
+lemmatizer = WordNetLemmatizer()
+
+def lemmatize_words(sentence):
+    words = word_tokenize(sentence)
+    return ' '.join([lemmatizer.lemmatize(word) for word in words])
+
+df['Lemmatized Sentence'] = df['Original Sentence'].apply(lemmatize_words)
+
+pd.set_option('display.max_colwidth', 50)
+pd.set_option('display.width', 1000)
+pd.set_option('display.max_rows', None)
+print("\nProcessed DataFrame (Lemmatized Sentences):\n")
+print(tabulate(df, headers='keys', tablefmt='grid'))
+
+
+import string
+tokens = word_tokenize(document)
+tokens = [word for word in tokens if word not in string.punctuation]
+
+df = pd.DataFrame({'tokenized_word:': tokens})
+pd.set_option('display.max_colwidth', None)
+pd.set_option('display.max_rows', None)
+print("\nProcessed DataFrame:\n")
+print(df.to_string(index=True))
+
+
+from nltk import pos_tag
+
+tokens = word_tokenize(document)
+tokens = [word for word in tokens if word not in string.punctuation]
+pos_tags = pos_tag(tokens)
+
+df = pd.DataFrame(pos_tags, columns=['Tokenized Word', 'POS Tag'])
+
+pd.set_option('display.max_colwidth', None)
+pd.set_option('display.max_rows', None)
+print("\nProcessed DataFrame (POS Tagging):\n")
+print(df.to_string(index=True))
+
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+sentences = sent_tokenize(document)
+vectorizer = TfidfVectorizer()
+tfidf_matrix = vectorizer.fit_transform(sentences)
+df_tfidf = pd.DataFrame(tfidf_matrix.toarray(), columns=vectorizer.get_feature_names_out())
+
+pd.set_option('display.max_columns', None)
+pd.set_option('display.width', 1000)
+pd.set_option('display.float_format', '{:.3f}'.format)
+print("\nTF-IDF Representation of the Uploaded Document:\n")
+print(df_tfidf.round(3).T.to_string(index=True))
+
+

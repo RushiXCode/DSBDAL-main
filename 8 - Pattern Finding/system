@@ -1,0 +1,53 @@
+import pandas as pd 
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+data = sns.load_dataset("titanic")
+
+data.info()
+
+data.isnull().sum()
+
+data.dtypes
+
+data['age'].fillna(data['age'].mean(), inplace=True)
+
+data['deck'].fillna(method='ffill', inplace=True)
+
+data['deck'].fillna(method='bfill', inplace=True)
+
+data.dropna(subset=['embarked'], inplace=True)
+
+data['sex'] = pd.factorize(data['sex'])[0]
+
+data['age'] = (data['age'] - data['age'].min()) / (data['age'].max() - data['age'].min())
+
+sns.catplot(x = "sex", hue= "survived", kind= "count", data=data)
+
+group = data.groupby('pclass').agg({'survived': ['mean', 'max', 'min','median','std']})
+group
+
+table = data.pivot_table(index="pclass", columns="survived", aggfunc="size",fill_value=0)
+
+sns.histplot(data['fare'], kde=False, bins=10)
+
+sns.heatmap(table, annot=True, fmt="d")
+
+sns.violinplot(x = "sex", y = "age", hue = "survived", data = data, split = True)
+
+sns.distplot(data['fare'])
+
+sns.jointplot(x = data['age'], y = data['fare'], kind ='scatter')
+
+sns.rugplot(data['age'])
+
+sns.barplot(x='sex', y='age', data=data, estimator=np.std)
+
+sns.stripplot(x='sex', y='age', data=data, jitter=False)
+
+sns.stripplot(x='sex', y='age', data=data, jitter=True)
+
+sns.stripplot(x='sex', y='age', data=data, jitter=True, hue='survived')
+
+sns.swarmplot(x='sex', y='age', data=data, hue='survived')

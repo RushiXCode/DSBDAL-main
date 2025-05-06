@@ -1,0 +1,32 @@
+import pandas as pd
+import numpy as np
+
+df = pd.read_csv("student-dataset.csv")
+
+df
+
+df.describe()
+
+df.info()
+
+print(df.size)
+
+print(df.shape)
+
+print(df.ndim)
+
+df.isnull().sum()
+
+df.dtypes
+
+df.drop(['column_name'], axis=1, inplace=True)
+
+dummy=pd.get_dummies(df.nationality)
+
+dummy = dummy.astype('int64')
+
+df['gender'] = df['gender'].replace({'M': 0, 'F': 1})
+
+df['age'] = (df['age'] - df['age'].min()) / (df['age'].max() - df['age'].min())
+
+df['english.grade'] = (df['english.grade'] - df['english.grade'].mean()) / df['english.grade'].std()

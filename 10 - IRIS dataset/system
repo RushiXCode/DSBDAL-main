@@ -1,0 +1,63 @@
+import pandas as pd 
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+data = pd.read_csv("iris.csv")
+
+data.describe()
+
+data.info()
+
+data.columns
+
+data.isnull().sum()
+
+data.hist()
+plt.show()
+
+sns.histplot(data['sepal.length'])
+
+sns.histplot(data['sepal.width'])
+
+sns.histplot(data['petal.length'])
+
+sns.histplot(data['petal.width'])
+
+data.boxplot()
+
+sns.boxplot(y='sepal.width', data=data)
+
+sns.boxplot(y='petal.width', data=data)
+
+Q1 = data['sepal.width'].quantile(0.25)
+Q3 = data['sepal.width'].quantile(0.75)
+IQR = Q3 - Q1
+sepal_width_outliers = data[(data['sepal.width'] < (Q1-1.5*IQR)) | (data['sepal.width'] > (Q3+1.5*IQR))]
+sepal_width_outliers
+
+Q1 = data['sepal.width'].quantile(0.25)
+Q3 = data['sepal.width'].quantile(0.75)
+IQR = Q3 - Q1
+sepal_width_within_range = data[~((data['sepal.width'] < (Q1 - 1.5 * IQR)) | (data['sepal.width'] > (Q3 + 1.5 * IQR)))]
+sepal_width_within_range
+
+sns.boxplot(y='sepal.width', data=sepal_width_outliers)
+
+sns.boxplot(y='sepal.width', data=sepal_width_within_range)
+
+Q1 = data['petal.width'].quantile(0.25)
+Q3 = data['petal.width'].quantile(0.75)
+IQR = Q3 - Q1
+petal_width_outliers = data[(data['sepal.length'] < (Q1-1.5*IQR)) | (data['sepal.length'] > (Q3+1.5*IQR))]
+petal_width_outliers
+
+Q1 = data['petal.width'].quantile(0.25)
+Q3 = data['petal.width'].quantile(0.75)
+IQR = Q3 - Q1
+petal_width_within_range = data[~((data['sepal.length'] < (Q1 - 1.5 * IQR)) | (data['sepal.length'] > (Q3 + 1.5 * IQR)))]
+petal_width_within_range
+
+sns.boxplot(y='petal.width', data=petal_width_outliers)
+
+sns.boxplot(y='petal.width', data=petal_width_within_range)
